@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Repository Name Creator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #a8e6cf, #dcedc1); /* Gradient background */
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background 0.5s ease;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff; /* White background for the form */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        .container:hover {
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transform: scale(1.02);
+        }
+        h1 {
+            text-align: center;
+            color: #00796b; /* Darker green color */
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #00796b; /* Darker green color */
+        }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid #00796b; /* Darker green border */
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input:focus, textarea:focus {
+            border-color: #004d40; /* Even darker green on focus */
+            outline: none;
+        }
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            background-color: #00796b; /* Darker green background */
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #004d40; /* Even darker green on hover */
+            transform: scale(1.05);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            color: #00796b; /* Darker green color */
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            background-color: #00796b; /* Darker green for the footer */
+            color: #ffffff;
+            text-align: center;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Dynamic Repository Name Creator</h1>
+        <form id="repoForm">
+            <label for="department">Department Name:</label>
+            <input type="text" id="department" name="department" required>
+
+            <label for="group">Group Name:</label>
+            <input type="text" id="group" name="group" required>
+
+            <label for="projects">Project Names (separate with commas):</label>
+            <textarea id="projects" name="projects" rows="5" required></textarea>
+
+            <button type="button" onclick="generateRepoNames()">Generate Repo Names</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <footer>
+        Managed by DevSecOps Team
+    </footer>
+
+    <script>
+        function generateAbbreviation(name) {
+            return name.split(' ').map(word => word.charAt(0).toLowerCase()).join('');
+        }
+
+        function abbreviateGroupName(name) {
+            const words = name.split(' ');
+            if (words.length === 1) {
+                return name.toLowerCase();
+            } else {
+                return words.map(word => word.charAt(0).toLowerCase()).join('');
+            }
+        }
+
+        function generateRepoNames() {
+            // Get input values
+            const department = document.getElementById('department').value.trim();
+            const group = document.getElementById('group').value.trim();
+            const projects = document.getElementById('projects').value.trim();
+
+            // Generate Department Abbreviation
+            const departmentAbbreviation = generateAbbreviation(department);
+
+            // Generate Group Name Abbreviation
+            const groupAbbreviation = abbreviateGroupName(group);
+
+            // Process each project name
+            const projectNames = projects.split(',').map(p => p.trim().replace(/\s+/g, '-').toLowerCase());
+            const repoNames = projectNames.map(project => `${departmentAbbreviation}-${groupAbbreviation}-${project}`);
+
+            // Display the results
+            document.getElementById('result').innerHTML = repoNames.map(name => `<div>${name}</div>`).join('');
+        }
+    </script>
+</body>
+</html>
